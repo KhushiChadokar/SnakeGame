@@ -1,3 +1,4 @@
+
 package snakegame;
 
 import javax.swing.*;
@@ -29,6 +30,9 @@ public class Board extends JPanel implements ActionListener {
     
     private int dots;
     private Timer timer;
+
+    private int score = 0;              // Score variable
+    private final int INITIAL_DOTS = 3; // Initial snake length
     
     Board() {
         addKeyListener(new TAdapter());
@@ -53,7 +57,8 @@ public class Board extends JPanel implements ActionListener {
     }
     
     public void initGame() {
-        dots = 3;
+        dots = INITIAL_DOTS;
+        score = 0;   // Reset score
         
         for (int i = 0; i < dots; i++) {
             y[i] = 50;
@@ -92,6 +97,11 @@ public class Board extends JPanel implements ActionListener {
                 }
             }
 
+            // Draw the score
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Arial", Font.BOLD, 14));
+            g.drawString("Score: " + score, 10, 20);
+
             Toolkit.getDefaultToolkit().sync();
         } else {
             gameOver(g);
@@ -101,11 +111,15 @@ public class Board extends JPanel implements ActionListener {
     public void gameOver(Graphics g) {
         String msg = "Game Over!";
         Font font = new Font("SAN_SERIF", Font.BOLD, 14);
-        FontMetrics metrices = getFontMetrics(font);
+        FontMetrics metrics = getFontMetrics(font);
         
         g.setColor(Color.WHITE);
         g.setFont(font);
-        g.drawString(msg, (300 - metrices.stringWidth(msg)) / 2, 300/2);
+        g.drawString(msg, (300 - metrics.stringWidth(msg)) / 2, 300/2);
+
+        // Also show final score
+        String finalScore = "Final Score: " + score;
+        g.drawString(finalScore, (300 - metrics.stringWidth(finalScore)) / 2, (300/2) + 20);
     }
     
     public void move() {
@@ -131,6 +145,7 @@ public class Board extends JPanel implements ActionListener {
     public void checkApple() {
         if ((x[0] == apple_x) && (y[0] == apple_y)) {
             dots++;
+            score++;          // Increase score when apple eaten
             locateApple();
         }
     }
@@ -200,5 +215,4 @@ public class Board extends JPanel implements ActionListener {
             }
         }
     }
-    
 }
